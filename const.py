@@ -6,5 +6,8 @@ try:
 except ModuleNotFoundError:
     pass
 
-BASE_URL: str = getenv('ZPA_SCIM_BASE_URL', '')
-TOKEN: str = getenv('ZPA_SCIM_TOKEN', '')
+ZPA_BASE_URL: str = getenv('ZPA_SCIM_BASE_URL', '')
+ZPA_TOKEN: str = getenv('ZPA_SCIM_TOKEN', '')
+
+ZIA_BASE_URL: str = getenv('ZIA_SCIM_BASE_URL', '')
+ZIA_TOKEN: str = getenv('ZIA_SCIM_TOKEN', '')

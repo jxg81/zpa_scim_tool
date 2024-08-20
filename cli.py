@@ -3,13 +3,10 @@ import subprocess
 import platform
 import json
 
-from api import zpa_scim_api
-from const import BASE_URL, TOKEN
+from api import scim_api
+from const import ZPA_BASE_URL, ZPA_TOKEN, ZIA_BASE_URL, ZIA_TOKEN
 
-if not BASE_URL:
-    BASE_URL = input('SCIM Provisioning URL (i.e https://scim.../v2): ')
-if not TOKEN:
-    TOKEN = input('Bearer Token: ')
+
 
 
 def clear():
@@ -18,10 +15,10 @@ def clear():
     else:
         subprocess.run('clear')
 
-def menu(client: zpa_scim_api, action=0):
+def menu(client: scim_api, action=0, product='ZPA'):
     clear()
-    print('''
-           Welcome to ZPA SCIM Tool
+    print(f'''
+           You are currently managing: {product}
            [1] - Create User
            [2] - View All Users
            [3] - Delete User
@@ -31,9 +28,10 @@ def menu(client: zpa_scim_api, action=0):
            [7] - Exit
            
            Notes:
-           UserID and GroupID entries should be the 'ZPA Internal ID'. Referenced as 'id' in API responses
+           UserID and GroupID entries should be the 'ZIA/ZPA Internal ID'. Referenced as 'id' in API responses
            ExternalID is an arbitrary unique value used to track ID's in the source ID repository
-           Make sure ExternalID is unique for each entry\n''')
+           Make sure ExternalID is unique for each entry
+           The ZIA domain suffix for username must match one of the domains associated with the ZIA tenant''')
     if action == 0:
         action = int(input("What would you like to do today?: "))
     if action == 1:
@@ -121,10 +119,36 @@ def menu(client: zpa_scim_api, action=0):
 
 
 if __name__ == '__main__':
-    client = zpa_scim_api(BASE_URL,TOKEN)
-    action = 0
+    print('''
+        Welcome to ZIA/ZPA SCIM Tool
+        [1] - ZPA SCIM Management
+        [2] - ZIA SCIM Management
+        [3] - Exit
+        \n''')
+    
+    choice = int(input("What would you like to do today?: "))
+    if choice == 1:
+        clear()
+        if not ZPA_BASE_URL:
+            ZPA_BASE_URL = input('ZPA SCIM Provisioning URL (i.e https://scim.../v2): ')
+        if not ZPA_TOKEN:
+            ZPA_TOKEN = input('ZPA Bearer Token: ')
+        client = scim_api(ZPA_BASE_URL,ZPA_TOKEN)
+        product = 'ZPA'
+        action = 0
+    if choice == 2:
+        clear()
+        if not ZIA_BASE_URL:
+            ZPA_BASE_URL = input('ZIA SCIM Provisioning URL (i.e https://scim.zscal.../scim): ')
+        if not ZIA_TOKEN:
+            ZPA_TOKEN = input('ZIA Bearer Token: ')
+        client = scim_api(ZIA_BASE_URL,ZIA_TOKEN)
+        product = 'ZIA'
+        action = 0
+    if choice not in (1,2):
+        action = 7
     while action != 7:
-        action = menu(client, action)  
+        action = menu(client, action, product)  
     
 
 #external_id = input("Enter External ID: ")

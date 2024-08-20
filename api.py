@@ -2,11 +2,7 @@ import httpx
 import json
 
 
-BASE_URL = ''
-TOKEN = ''
-
-
-class zpa_scim_api():
+class scim_api():
     def __init__(self, base_url, token):
         """
         Initializes a new instance of the class with the given base URL and token.
